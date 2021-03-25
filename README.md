@@ -1,10 +1,10 @@
 SmartMatrix LED RTC Clock
 ========================================
 
-This examples uses the SmartLED Shield V4 for Teensy 3 to display the current time on an LED Matrix. Time is kept with the RTC1307
+This examples uses the SmartLED Shield V4 for Teensy 3 to display the current time on a 32x32 LED RGB Matrix Panel. Time is kept with the DS1307 RTC. This example also includes a jumper to adjust for daylight savings.
+
 Repository Contents
 -------------------
-
 
 * **/Firmware** - Example code 
 
