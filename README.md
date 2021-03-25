@@ -12,4 +12,4 @@ Documentation
 --------------
 * **[Library](https://github.com/pixelmatix/SmartMatrix)** - Arduino library for the SmartMatrix.
 * **[PixelMatix SmartMatrix](http://docs.pixelmatix.com/SmartMatrix/)** - Official documentation for the SmartLED Shield
-* **[Getting Started with the SmartLED Shield for Teensy](https://learn.sparkfun.com/tutorials/getting-started-with-the-smartled-shield-for-teensy)** - Basic getting started guide for hte SmartLED Shield for Teensy.
+* **[Getting Started with the SmartLED Shield for Teensy](https://learn.sparkfun.com/tutorials/getting-started-with-the-smartled-shield-for-teensy)** - Basic getting started guide for the SmartLED Shield for Teensy.
