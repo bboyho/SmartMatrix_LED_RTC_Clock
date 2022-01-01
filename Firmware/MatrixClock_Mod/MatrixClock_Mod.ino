@@ -57,8 +57,10 @@ int buttonDSTState = HIGH; //set DST button HIGH, so not pressing
 void setup() {
   Serial.begin(9600);
   delay(200);
+  Serial.println("-------------------");
   Serial.println("DS1307RTC Read Test");
   Serial.println("-------------------");
+  Serial.println("Ds1307 last set @ 6:20:00pm, 12/31/2021");
 
   // setup DST button and LED
   pinMode(buttonDSTPin, INPUT_PULLUP); //use internal pullup resistor to DST button
