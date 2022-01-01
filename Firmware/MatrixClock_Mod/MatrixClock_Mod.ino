@@ -4,8 +4,15 @@
    accessible on the SmartMatrix Shield.
    
    The code also adjusts the time for Daylight Savings Time.
-   After setting the DS1307, adjust the boolean value for 
-   `DST` based on the time and either true/false in your region.
+   Make sure to set the DS1307 based on the UTC and offset in your
+   region without daying savings time. For example, if the DS1307
+   was set on 12/31/2021 in the Mountin Standard Time, do not set
+   the time based on Daylight Savings. Otherwise, it will be off
+   by 1 hour when using the jumper wire in the spring. If you
+   are using the code to set the time based on the compiler run time
+   , turn off the autmoatic syncs and adjust your computer's clock
+   based on the UTC and offset for your region.
+   
    Connect a jumper wire from pin 15 to ground to toggle DST.
    Over time, the minutes on the DS1307 will fall behind the
    current time so you will need to set the time again.
@@ -43,10 +50,9 @@ const int defaultBrightness = (50 * 255) / 100; // full (100%) brightness
 //const SM_RGB clockColor = {0xff, 0xff, 0xff}; //white
 const SM_RGB clockColor = {0x00, 0xff, 0xff}; //cyan
 
-//adjust the DST based on when the DS1307 was set
 //Mountain Daylight Time == false, i.e. spring forward 1 hour, LED ON
 //Daylight Savings Time (DST) == true, i.e. fall back 1 hour, LED OFF
-boolean DST = true; //assuming the clock was set when Daylight Savings Time (e.g. 12/31/2021 => DST, so DST = true), fall back!
+boolean DST = false; //assuming the clock was set to the region without applying Daylight Savings (e.g. 12/31/2021 & UTC - 7)
 
 boolean prev_buttonDSTState = false;
 boolean current_buttonDSTState = false;
@@ -67,7 +73,7 @@ void setup() {
   delay(200);
   Serial.println("DS1307RTC Read Test");
   Serial.println("-------------------");
-  Serial.println("DS1307 last set @ 6:20:00pm, 12/31/2021");
+  Serial.println("DS1307 last set @ 9:45:50pm (this was 13 seconds behind current time), 12/31/2021");
 
   // setup DST button and LED
   pinMode(buttonDSTPin, INPUT_PULLUP); //use internal pullup resistor to DST button
