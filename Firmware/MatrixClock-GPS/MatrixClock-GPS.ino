@@ -341,6 +341,7 @@ void displayDigital_Date_Time() {
   //tmElements_t tm;
   int x = kMatrixWidth / 2 - 15;
   char timeBuffer[9];
+  char dateBuffer[9];
 
   // clear screen before writing new text
   indexedLayer.fillScreen(0);
@@ -389,13 +390,10 @@ void displayDigital_Date_Time() {
   indexedLayer.setFont(gohufont11b);
   
   //display date
-  /*
-  indexedLayer.drawString(x, kMatrixHeight / 2 - 6, 1, months);
-  indexedLayer.drawString(x, kMatrixHeight / 2 - 6, 1, "/");
-  indexedLayer.drawString(x, kMatrixHeight / 2 - 6, 1, days);
-  indexedLayer.drawString(x, kMatrixHeight / 2 - 6, 1, "/");
-  indexedLayer.drawString(x, kMatrixHeight / 2 - 6, 1, years);
-*/
+  //sprintf(dateBuffer, "%02d/%02d/02d", months, days, years-2000);
+  sprintf(dateBuffer, "%02d/%02d", months, days);
+  indexedLayer.drawString(x, 0, 1, dateBuffer);
+
 
   
   sprintf(timeBuffer, "%d:%02d", hour, minutes);
