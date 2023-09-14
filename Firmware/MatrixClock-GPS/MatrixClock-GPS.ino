@@ -56,17 +56,23 @@ const uint8_t kRefreshDepth = 36;       // known working: 24, 36, 48
 const uint8_t kDmaBufferRows = 4;       // known working: 2-4, use 2 to save memory, more to keep from dropping frames and automatically lowering refresh rate
 const uint8_t kPanelType = SMARTMATRIX_HUB75_32ROW_MOD16SCAN;   // use SMARTMATRIX_HUB75_16ROW_MOD8SCAN for common 16x32 panels
 const uint8_t kMatrixOptions = (SMARTMATRIX_OPTIONS_NONE);      // see http://docs.pixelmatix.com/SmartMatrix for options
+const uint8_t kScrollingLayerOptions = (SM_SCROLLING_OPTIONS_NONE);
 const uint8_t kIndexedLayerOptions = (SM_INDEXED_OPTIONS_NONE);
 
 SMARTMATRIX_ALLOCATE_BUFFERS(matrix, kMatrixWidth, kMatrixHeight, kRefreshDepth, kDmaBufferRows, kPanelType, kMatrixOptions);
+SMARTMATRIX_ALLOCATE_SCROLLING_LAYER(scrollingLayer, kMatrixWidth, kMatrixHeight, COLOR_DEPTH, kScrollingLayerOptions);
 SMARTMATRIX_ALLOCATE_INDEXED_LAYER(indexedLayer, kMatrixWidth, kMatrixHeight, COLOR_DEPTH, kIndexedLayerOptions);
 
-const int defaultBrightness = 100 * (255 / 100); // full brightness
-//const int defaultBrightness = 15*(255/100);    // dim: 15% brightness
+//const int defaultBrightness = 100 * (255 / 100); // full brightness
+const int defaultBrightness = 15 * (255 / 100); // dim: 15% brightness
 
-//const SM_RGB clockColor = {0xff, 0xff, 0xff}; //white
-const SM_RGB clockColor = {0x00, 0xff, 0xff}; //cyan
+//const SM_RGB clockColorWhite = {0xff, 0xff, 0xff}; //white
+int red = 0x00;
+int green = 0xff;
+int blue = 0xff;
 
+SM_RGB clockColor = {red, blue, green}; //cyan
+const SM_RGB clockColorGreen = {0x00, 0xff, 0x00}; //green
 
 
 //DST button and LED
@@ -94,7 +100,11 @@ void setup() {
 
   // setup matrix
   matrix.addLayer(&indexedLayer);
+  matrix.addLayer(&scrollingLayer);
+
   matrix.begin();
+
+
 
   /* I2C Changes Needed for SmartMatrix Shield */
   // switch pins to use 16/17 for I2C instead of 18/19, after calling matrix.begin()//
@@ -387,22 +397,30 @@ void displayDigital_Date_Time() {
 
 
   //display on LED Matrix
-  indexedLayer.setFont(gohufont11b);
-  
+  scrollingLayer.setFont(gohufont11b);
+
   //display date
-  //sprintf(dateBuffer, "%02d/%02d/02d", months, days, years-2000);
-  sprintf(dateBuffer, "%02d/%02d", months, days);
-  indexedLayer.drawString(x, 0, 1, dateBuffer);
+  //sprintf(dateBuffer, "%02d/%02d/%02d", months, days, years-2000);
+  //sprintf(dateBuffer, "%02d/%02d", months, days);
+  //indexedLayer.drawString(x, 0, 1, dateBuffer);
+
+  scrollingLayer.setOffsetFromTop(kMatrixHeight / 2 - 16);
+  sprintf(dateBuffer, "%2d/%2d/%4d", months, days, years);
+  scrollingLayer.setColor(clockColor);
+  scrollingLayer.setMode(wrapForward);
+  scrollingLayer.setSpeed(5);
+  scrollingLayer.start(dateBuffer, 2);
+  //while (scrollingLayer.getStatus());
 
 
-  
+  indexedLayer.setFont(gohufont11b);
   sprintf(timeBuffer, "%d:%02d", hour, minutes);
   if (hour < 10)
     x += 3;
   // ...drawstring(x, y, 1, timeBuffer)
   //center time and AM/PM if less than 9
   if (hour < 10) {
-  indexedLayer.drawString(x + 1, kMatrixHeight / 2 - 6, 1, timeBuffer); //draw clock in the middle of 32x32
+    indexedLayer.drawString(x + 1, kMatrixHeight / 2 - 6, 1, timeBuffer); //draw clock in the middle of 32x32
 
     if (AM == true) {
       indexedLayer.drawString(x + 7, kMatrixHeight / 2 + 4, 1, "AM"); //draw AM
@@ -421,7 +439,7 @@ void displayDigital_Date_Time() {
 
   //center time and AM/PM if less than 10-12
   else if (hour >= 10) {
-  indexedLayer.drawString(x, kMatrixHeight / 2 - 6, 1, timeBuffer); //draw clock in the middle of 32x32
+    indexedLayer.drawString(x, kMatrixHeight / 2 - 6, 1, timeBuffer); //draw clock in the middle of 32x32
 
     if (AM == true) {
       indexedLayer.drawString(x + 10, kMatrixHeight / 2 + 4, 1, "AM"); //draw AM
